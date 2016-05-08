@@ -1,99 +1,62 @@
-VHDL code:
-
 library IEEE;
-
+library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
 use IEEE.STD_LOGIC_ARITH.ALL;
-
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
--- Uncomment the following lines to use the declarations that are
 
--- provided for instantiating Xilinx primitive components.
 
--- library UNISIM;
-
--- use UNISIM.VComponents.all;
+--  Uncomment the following lines to use the declarations that are
+--  provided for instantiating Xilinx primitive components.
+--library UNISIM;
+--use UNISIM.VComponents.all;
 
 entity counter_n is
-
-Port ( rst : in std_logic;
-
-clk : in std_logic;
-
-disp : out std_logic_vector(7 downto 0));
-
+    Port ( rst : in std_logic;
+           clk : in std_logic;
+           disp : out std_logic_vector(7 downto 0));
 end counter_n;
 
 architecture Behavioral of counter_n is
-
 signal temp: std_logic_vector (10 downto 0);
-
 signal count:integer range 0 to 9;
-
 signal slow_clk:std_logic;
-
 begin
-
 process(rst,clk)
-
 begin
-
-if rst=1 then
-
-temp<=(others>='0');
-
-elsif (clk event and clk='1')then
-
+if rst='1' then
+temp<=(others=>'0');
+elsif (clk'event and clk='1')then
 temp<=temp+1;
-
 end if;
 
 end process;
-
-slow_clck<=temp(10);
-
+slow_clk<=temp(10);
 process(slow_clk,rst)
-
 begin
-
-if rst=&#39;1&#39; then
-
-count &lt;=0;
-
-elsif (slow_clk&#39; event and slow_clk=&#39;1&#39;) then
-
-if count=9 then count&lt;=0;
-
-else count&lt;=count+1 ;
-
+if rst='1' then 
+count <=0;
+elsif (slow_clk' event and slow_clk='1') then
+if count=9 then count<=0;
+else count<=count+1 ;
 end if;
-
 end if;
-
 end process;
-
 with count select
-
-disp&lt;=&quot;10111111&quot; when 0,
-
-&quot;10000110&quot; when 1,
-
-&quot;11011011&quot; when 2,
-
-&quot;11001111&quot; when 3,
-
-&quot;11100110&quot; when 4,
-
-&quot;11101101&quot; when 5,
-
-&quot;11111101&quot; when 6,
-
-&quot;10000111&quot; when 7,
-
-&quot;11111111&quot; when 8,
-
-&quot;11101111&quot; when 9;
+disp<="10111111" when 0,
+      "10000110" when 1,
+      "11011011" when 2,
+      "11001111" when 3,
+      "11100110" when 4,
+      "11101101" when 5,
+      "11111101" when 6,
+      "10000111" when 7,
+      "11111111" when 8,
+	 "11101111" when 9;
 
 end behavioral;
+
+
+
+
+
