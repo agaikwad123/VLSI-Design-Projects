@@ -1,0 +1,78 @@
+ibrary IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+entity tfc101 is
+    Port ( rst : in std_logic;
+           clk : in std_logic;
+           R1 : out std_logic;
+           Y1 : out std_logic;
+           G1 : out std_logic;
+           R2 : out std_logic;
+           Y2 : out std_logic;
+           G2 : out std_logic);
+end tfc101;
+
+architecture Behavioral of tfc101 is
+ 	signal count:integer;
+ 	signal temp:std_logic_vector(5 downto 0);
+ 	signal slw_clk:std_logic;
+	type state_type is (S0,S1,S2,S3);
+	signal state:state_type;
+begin
+  	p1:process(clk,rst)
+	begin
+		if rst='1' then
+		temp<=(others=>'0');
+		elsif clk'event and clk='1' then
+		temp<=temp+1;
+		end if;
+	end process;
+	slw_clk<=temp(5);
+	
+	p2:process(slw_clk,rst)
+	begin
+		if  rst='1' then
+		count<=0;
+		state<=S0;
+		R1<='0';Y1<='0';G1<='0';
+		R2<='0';Y2<='0';G2<='0';
+		elsif (slw_clk'event and slw_clk='1') then
+			if count=45 then
+			count<=0;
+			else
+			count<=count+1;
+		end if;
+			case state is
+			when S0=>	R1<='1';Y1<='0';G1<='0';
+					R2<='0';Y2<='0';G2<='1';
+			if count<=20 then
+			state<=S0;
+			else
+			state<=S1;
+			end if;
+			when S1=>	R1<='1';Y1<='0';G1<='0';
+					R2<='0';Y2<='1';G2<='0';
+			if count<=22 then
+			state<=S1;
+			else
+			state<=S2;
+			end if;
+			when S2=>	R1<='0';Y1<='0';G1<='1';
+					R2<='1';Y2<='0';G2<='0';
+			if count<=42 then
+			state<=S2;
+			else
+			state<=S3;
+			end if;
+			when S3=>	R1<='0';Y1<='1';G1<='0';
+					R2<='1';Y2<='0';G2<='0';
+			if count<=44 then
+			state<=S3;
+			else
+			state<=S0;
+			end if;
+			end case;
+		end if;
+	end process;
+end Behavioral;
